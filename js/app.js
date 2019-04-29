@@ -43,7 +43,8 @@ function loadPage() {
   $('#other-title').hide();
   $('#credit-card').next().hide();
   $('#credit-card').next().next().hide();
-  $('button').attr('disabled', true);
+  // $('button').attr('disabled', true);
+  // $('button').css('color', 'grey');
 
 
   /* 
@@ -88,10 +89,7 @@ function loadPage() {
 
   $("button").on('submit click', function (e) { 
     e.preventDefault();
-    if (validate.button()) {
-      alert('submited') ;
-      clearPage();
-    };    
+    validate.button();   
   });
 
 
@@ -239,11 +237,16 @@ function Validate() {
   */
   let errormsg = '';
   this.name = function (input, elem){
-    const regex = /^[a-z A-Z .]+$/;
-    errormsg = 'A name must have letters only';
-    regex.test(input) ? 
-      this.error(false, elem) : 
+    let regex = /^[a-z A-Z .0-9]{2,40}$/;
+    errormsg = 'A name must have more than 2 letters';
+    if (regex.test(input)) {
+      this.error(false, elem)
+      regex = /^\D+$/;
+      errormsg = "Don't use numbers";
+      regex.test(input) ? this.error(false, elem) : this.error(true, elem, errormsg); 
+    } else {
       this.error(true, elem, errormsg);
+    }
   }
 
   /* 
@@ -283,9 +286,18 @@ function Validate() {
   accepts only when have a correct credit card number
   */
   this.creditcardn = function (input, elem) {
-    let regex = /^(\d{4}) +(\d{4}) +(\d{4}) +(\d{4})$/;
-    errormsg = 'You must type only credit card numbers and space between ex.: 5555 5555 5555 5555';
-    regex.test(input) ? this.error(false, elem) : this.error(true, elem, errormsg);
+    // let regex = /^(\d{4}) +(\d{4}) +(\d{4}) +(\d{4})$/;
+    let regex = /[A-Za-z]/g;
+    let regex2 = /^\d{13}\d{0,3}$/;
+     if (regex.test(input)) {
+      errormsg = "Don't use letters";
+      this.error(true, elem, errormsg)
+    } else if (regex2.test(input)) {
+      this.error(false, elem); 
+    } else {
+      errormsg = 'You must type only 13 to 16 numbers';
+      this.error(true, elem, errormsg);
+    }
   }
 
   /*
@@ -294,7 +306,7 @@ function Validate() {
   */
   this.zipcoden = function (input, elem) {
     const regex = /^\d{5}$/;
-    errormsg = 'You must type only zipcode 5 numbers ex.: 10000';
+    errormsg = 'You must type only 5 numbers';
     regex.test(input) ? 
       this.error(false, elem) : 
       this.error(true, elem, errormsg);
@@ -305,28 +317,31 @@ function Validate() {
   accepts only when have a correct credit card CVV number
   */
  this.creditcardcvv = function (input, elem) {
-  const regex = /^\d{3}$/;
-  errormsg = 'You must type only credit card cvv 3 numbers ex.: 100';
+  let regex = /^\d{3}$/;
+  errormsg = 'You must type only 3 numbers';
   regex.test(input) ? 
     this.error(false, elem) : 
     this.error(true, elem, errormsg);
+  
   }
 
 this.button = function () {
-  let input;
-  $.each($('input[type="text"]'), function (i, v) { 
-    input += v.value;
-  });
-  if (input != '') {
-    $('button').attr('disabled', false);
-    $('button').css('color', 'white');
-    return true;    
-  } else {
-    $('button').attr('disabled', true);
-    $('button').css('color', 'grey');
-    return false;
-  }
-}
+  const validate = new Validate();
+  validate.name($('#name').val(), $('#name'));
+  validate.email($('#mail').val(), $('#mail'));
+  validate.activities($('#activities input'));
+  validate.creditcardn($('#cc-num').val(), $('#cc-num'));
+  validate.creditcardcvv($('#cvv').val(), $('#cvv'));
+  validate.zipcoden($('#zip').val(), $('#zip'));
+
+  let errors = $('.errorBox');
+  if (errors.length === 0) {
+      alert('submited') ;
+      clearPage();
+    }; 
+};
+
+
 
   /* 
   SUPPORT FUNCTION: ERROR CONTROLLER
@@ -339,14 +354,11 @@ this.button = function () {
     if (iserror) {      
       $(elem).addClass('errorBox');
       span.style.display = "inherit";
-      $('button').attr('disabled', true);
-      $('button').css('color', 'grey');
       } else {
       $(elem).removeClass('errorBox');
       span.style.display = "none";
-      $('button').attr('disabled', false);
-      $('button').css('color', 'white');
       }
+      // this.button();
   }
 
   /* 

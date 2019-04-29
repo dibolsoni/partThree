@@ -2,10 +2,6 @@
   Base Element Styles
 ==================================== */
 
-* {
-  box-sizing: border-box;
-}
-
 body,
 input,
 button {
@@ -38,28 +34,17 @@ a {
   font-size: 0.8em;
 	text-align: center;
 	background: #2F558E;
-	position: relative;
-  left: 105%;
-  top: 0;
-  width: 160px;
-  padding: 7px 10px;
-  color: #fff;
+	margin-left: 5px;
+	/* position: relative; */
+	left: 100%;
+	line-height: 13px;
+  top: 50%;
+	width: 20%;
+	height: 100%;
+  padding: 4px 8px;
+	color: #fff;
 }
 
-.error:after {
-  right: 100%;
-  top: 50%;
-  border: solid transparent;
-	content: " ";
-	/* position: absolute; */
-  height: 0;
-	width: 0;
-  pointer-events: none;
-  border-color: rgba(136, 183, 213, 0);
-  border-right-color: #2F558E;
-  border-width: 8px;
-  margin-top: -8px;
-}
 /* ================================= 
   Form Element Styles
 ==================================== */
@@ -70,7 +55,7 @@ form {
 }
 
 .errorBox {
-	border: 1.5px solid red;
+	background: rgba(255, 4, 4, 0.205);
 }
 
 
@@ -78,14 +63,14 @@ form {
 fieldset,
 legend,
 button {
-	position: relative; 
-	display: block;
 	padding: 0;
 	border: none;
 }
 
 fieldset {
 	margin-top: 1.5em;
+	display: inline-block;
+	width: 100%;
 }
 
 legend,
@@ -98,18 +83,19 @@ legend {
 	padding-top: .5em;
 	border-top: 2px solid #679cb3;
 	margin-bottom: 1.125em;
+	width: 100%;
 }
 
 input[type="text"],
-input[type="email"],
-legend {
-	width: 100%;
+input[type="email"] {
+	width: 70%;
 }
 
 label {
 	color: #000;
-	display: block;
 	margin-bottom: .5em;
+	width: 100%;
+	display: block;
 }
 
 input,
@@ -149,6 +135,7 @@ button:hover {
 	background: #184c62;
 }
 
+
 /* ================================= 
   Page Styles
 ==================================== */
@@ -169,7 +156,35 @@ button:hover {
 
 .credit-card {
 	margin-top: 1.25em;
+	display: inline-block;
+	width: 100%;
 }
+
+.credit-number {
+	width: 100%;
+	display: inline-block;
+}
+
+.cvvzip {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	width: 100%;
+	justify-content: flex-start;
+	margin: auto;
+	text-align: left;
+	order: -1;
+}
+
+.cvvzip input {
+	width: 10%;
+}
+
+.cvvzip label {
+	width: auto;
+	margin-left: 5px;
+}
+
 
 /* ================================= 
   Helper Classes
