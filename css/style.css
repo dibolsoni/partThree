@@ -32,6 +32,34 @@ a {
   text-decoration: none;
 }
 
+.error {
+  border-radius: 5px;
+  display: none;
+  font-size: 0.8em;
+	text-align: center;
+	background: #2F558E;
+	position: relative;
+  left: 105%;
+  top: 0;
+  width: 160px;
+  padding: 7px 10px;
+  color: #fff;
+}
+
+.error:after {
+  right: 100%;
+  top: 50%;
+  border: solid transparent;
+	content: " ";
+	/* position: absolute; */
+  height: 0;
+	width: 0;
+  pointer-events: none;
+  border-color: rgba(136, 183, 213, 0);
+  border-right-color: #2F558E;
+  border-width: 8px;
+  margin-top: -8px;
+}
 /* ================================= 
   Form Element Styles
 ==================================== */
@@ -41,9 +69,17 @@ form {
 	background: #85b5ca;
 }
 
+.errorBox {
+	border: 1.5px solid red;
+}
+
+
+
 fieldset,
 legend,
 button {
+	position: relative; 
+	display: block;
 	padding: 0;
 	border: none;
 }
