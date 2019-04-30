@@ -11,6 +11,14 @@ function clearPage(){
   $('#zip').val('');
   $('#cvv').val('');
 
+
+  /* 
+  CREDIT-CARD SELECT, HIDE OTHERS
+  */
+  $('#credit-card').show();
+  $('#credit-card').next().hide();
+  $('#credit-card').next().next().hide();
+
   /*  
   CHECKBOXES CLEANER
   */
@@ -43,13 +51,14 @@ function loadPage() {
   $('#other-title').hide();
   $('#credit-card').next().hide();
   $('#credit-card').next().next().hide();
-  // $('button').attr('disabled', true);
-  // $('button').css('color', 'grey');
+
 
 
   /* 
   EVENT LISTENER
   */
+ 
+  let validate = new Validate();
   $("#title").change(function (e) { 
     otherJob(e.target.value);    
   });
@@ -62,10 +71,10 @@ function loadPage() {
   });
 
   $("#payment").change(function (e) { 
-    paymentList($(this).val());    
+    paymentList($(this).val());
+    validate.clearPayment();    
   });
 
-  let validate = new Validate();
   $("#name").on('keyup change paste', function (e) { 
     validate.name(e.target.value, this);
   });
@@ -146,7 +155,7 @@ function tShirt(select) {
 
 /*
 SUPPORT FUNCTION: ACTIVITIES 
-block and unblock an element based in the conflicts in day and hour of each other
+block and unblock an element based in  its conflicts in day and hour with others
 */
 function activitieBlock(acvt, elem){
   if ($(elem).is(':checked')){
@@ -286,18 +295,25 @@ function Validate() {
   accepts only when have a correct credit card number
   */
   this.creditcardn = function (input, elem) {
-    // let regex = /^(\d{4}) +(\d{4}) +(\d{4}) +(\d{4})$/;
     let regex = /[A-Za-z]/g;
     let regex2 = /^\d{13}\d{0,3}$/;
-     if (regex.test(input)) {
-      errormsg = "Don't use letters";
-      this.error(true, elem, errormsg)
-    } else if (regex2.test(input)) {
+    let selected;
+    $('#payment').val() === 'credit-card' ? selected = true: selected = false;
+
+    if (!selected) {
+      this.error(false, elem) 
+      return true;
+    } 
+    if (regex2.test(input)) {
       this.error(false, elem); 
-    } else {
-      errormsg = 'You must type only 13 to 16 numbers';
+    } else if (regex.test(input)) {
+      errormsg = "Don't use letters";
       this.error(true, elem, errormsg);
+    } else  {
+      errormsg = 'You must type only 13 to 16 numbers';
+      this.error(true, elem, errormsg)
     }
+
   }
 
   /*
@@ -305,9 +321,11 @@ function Validate() {
   accepts only when have a ZIPCODE number
   */
   this.zipcoden = function (input, elem) {
+    let selected;
+    $('#payment').val() === 'credit-card' ? selected = true: selected = false;
     const regex = /^\d{5}$/;
     errormsg = 'You must type only 5 numbers';
-    regex.test(input) ? 
+    !regex.test(input) && !selected ? 
       this.error(false, elem) : 
       this.error(true, elem, errormsg);
   }
@@ -317,14 +335,30 @@ function Validate() {
   accepts only when have a correct credit card CVV number
   */
  this.creditcardcvv = function (input, elem) {
+  let selected;
+  $('#payment').val() === 'credit-card' ? selected = true: selected = false;
   let regex = /^\d{3}$/;
   errormsg = 'You must type only 3 numbers';
-  regex.test(input) ? 
+  !regex.test(input) && !selected  ? 
     this.error(false, elem) : 
     this.error(true, elem, errormsg);
   
   }
 
+  this.clearPayment = function () {
+    if ($('#payment').val() != 'credit-card') {
+      $.each($('#credit-card input[type="text"]'), function (i, v) { 
+        v.value = '';
+        $(v).removeClass();
+      });
+    }
+  }
+
+
+  /* 
+  BUTTON SUBMIT CONTROLLER
+  when validates all inputs before pass to submit
+  */
 this.button = function () {
   const validate = new Validate();
   validate.name($('#name').val(), $('#name'));
@@ -336,6 +370,7 @@ this.button = function () {
 
   let errors = $('.errorBox');
   if (errors.length === 0) {
+
       alert('submited') ;
       clearPage();
     }; 
@@ -358,7 +393,6 @@ this.button = function () {
       $(elem).removeClass('errorBox');
       span.style.display = "none";
       }
-      // this.button();
   }
 
   /* 
