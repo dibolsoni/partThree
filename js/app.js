@@ -323,9 +323,10 @@ function Validate() {
   this.zipcoden = function (input, elem) {
     let selected;
     $('#payment').val() === 'credit-card' ? selected = true: selected = false;
+    console.log(selected)
     const regex = /^\d{5}$/;
     errormsg = 'You must type only 5 numbers';
-    !regex.test(input) && !selected ? 
+    regex.test(input) || !selected ? 
       this.error(false, elem) : 
       this.error(true, elem, errormsg);
   }
@@ -339,7 +340,7 @@ function Validate() {
   $('#payment').val() === 'credit-card' ? selected = true: selected = false;
   let regex = /^\d{3}$/;
   errormsg = 'You must type only 3 numbers';
-  !regex.test(input) && !selected  ? 
+  regex.test(input) || !selected  ? 
     this.error(false, elem) : 
     this.error(true, elem, errormsg);
   
